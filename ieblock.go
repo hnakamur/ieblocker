@@ -59,7 +59,13 @@ func CurrentVersion() (IEVersion, error) {
 	fullVersion, err := w32registry.GetValueString(
 		syscall.HKEY_LOCAL_MACHINE,
 		`SOFTWARE\Microsoft\Internet Explorer`,
-		"Version")
+		"svcVersion")
+	if err == syscall.ERROR_FILE_NOT_FOUND {
+		fullVersion, err = w32registry.GetValueString(
+			syscall.HKEY_LOCAL_MACHINE,
+			`SOFTWARE\Microsoft\Internet Explorer`,
+			"Version")
+	}
 	if err != nil {
 		return 0, err
 	}
